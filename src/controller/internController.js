@@ -4,7 +4,7 @@ let internModel= require("../models/internModel")
 
 let createIntern = async function (req, res) {
     try {
-        res.setHeader('Access-Control-Allow-Origin','*')
+
         if (req.body && Object.keys(req.body).length > 0) {
             let college = await collegeModel.findOne({name: req.body.collegeName, isDeleted: false })
              if(!college){
