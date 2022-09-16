@@ -29,7 +29,7 @@ const createColleges = async function (req, res) {
         //=====================check Mandatory keys=====================//
        
         if (!(name && fullName && logoLink)) {
-            res.status(400).send({ status: false, msg: "Mandatory fields are required" })
+           return res.status(400).send({ status: false, msg: "Mandatory fields are required" })
         }
 
 
@@ -57,8 +57,8 @@ const createColleges = async function (req, res) {
 
         //=====================creating College data in DB=====================//
         let college = await collegeModel.create(data)
-        let guru={name:college.name, fullName:college.fullName, logoLink:college.logoLink, isDeleted:college.isDeleted}
-        return res.status(201).send({ status: true, msg: guru })
+        let collegeResponse={name:college.name, fullName:college.fullName, logoLink:college.logoLink, isDeleted:college.isDeleted}
+        return res.status(201).send({ status: true, msg: collegeResponse })
     }
 
     catch (error) {

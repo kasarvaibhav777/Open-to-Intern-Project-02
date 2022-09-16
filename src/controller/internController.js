@@ -21,7 +21,7 @@ let createIntern = async function (req, res) {
         let data = req.body
 
         if (Object.keys(data).length == 0) {
-            res.status(400).send({ status: false, msg: "Body input is necessary" })
+          return  res.status(400).send({ status: false, msg: "Body input is necessary" })
         }
 
         let { name, email, mobile, collegeName } = data
@@ -29,7 +29,7 @@ let createIntern = async function (req, res) {
         //=====================check Mandatory keys=====================//
 
         if (!(name && email && mobile && collegeName)) {
-            res.status(400).send({ status: false, msg: "Mandatory fields are required" })
+           return  res.status(400).send({ status: false, msg: "Mandatory fields are required" })
         }
 
         //=====================Validation of name=====================//
@@ -42,7 +42,7 @@ let createIntern = async function (req, res) {
 
         //=====================Validation of EmailID=====================//
 
-        if (!checkValid(email)) return res.status(400).send({ status: false, message: "Spaces aren't Allowed." })
+        if (!checkValid(email)) return res.status(400).send({ status: false, message: "please provide correct type of email." })
         if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/).test(email)) { return res.status(400).send({ status: false, msg: "Please provide valid Email" }) }
         let duplicateEmail = await internModel.findOne({ email: email })
         if (duplicateEmail) { return res.status(409).send({ status: false, msg: "This EmailID already exists please provide another EmailID." }) }
@@ -65,7 +65,7 @@ let createIntern = async function (req, res) {
         //=====================check presence of collegeName in DB=====================//
 
         let clg = await collegeModel.findOne({ isDeleted: false, name: collegeName })
-        if (!clg) { res.status(404).send({ status: false, msg: "this college is not found" }) }
+        if (!clg) {return res.status(404).send({ status: false, msg: "this college is not found" }) }
 
         
         let obj = { ...data, collegeId: clg._id }
@@ -98,13 +98,13 @@ let collegeDetails = async function (req, res) {
 
         //=====================check Mandatory Query=====================//
      
-        if(!collegeName){res.status(400).send({status:false, msg:"CollegeName Query is Mandatory"})}
+        if(!collegeName){ return res.status(400).send({status:false, msg:"CollegeName Query is Mandatory"})}
 
 
         //=====================DB call to find college =====================//
 
         let getC = await collegeModel.findOne({ name: collegeName, isDeleted: false })
-        if (!getC) { res.status(400).send({ status: false, msg: "No College Found with Given CollegeName" }) }
+        if (!getC) {return res.status(400).send({ status: false, msg: "No College Found with Given CollegeName" }) }
 
         //=====================Assigning Necessary key Values from college doc=====================//
 
@@ -114,12 +114,12 @@ let collegeDetails = async function (req, res) {
         //=====================Db call to find intern with same college=====================//
 
         let intern = await internModel.find({ collegeId: getC._id, isDeleted: false }).select('_id name email mobile')
-        if (!intern) { res.status(404).send({ status: false, msg: "No Intern Available in this College" }) }
+        if (!intern) {return res.status(404).send({ status: false, msg: "No Intern Available in this College" }) }
         else {
         //=====================Assigning intern data in college data=====================//
 
             data.intern = intern
-            return res.status(200).send({ status: true, data: data })
+            return res.status(200).send({ status: true, CollegeData: data })
 
         }
        
