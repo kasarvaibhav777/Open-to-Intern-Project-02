@@ -29,7 +29,7 @@ const createColleges = async function (req, res) {
         //=====================check Mandatory keys=====================//
        
         if (!(name && fullName && logoLink)) {
-            res.status(400).send({ status: false, msg: "Mandatory fields are required" })
+           return  res.status(400).send({ status: false, msg: "Mandatory fields are required" })
         }
 
 
