@@ -4,6 +4,7 @@ let internModel = require("../models/internModel")
 
 
 //=====================Function to check type of key value=====================//
+
 let checkValid = function (value) {
     if (typeof value == "undefined" || typeof value == "number" || value.length == 0 || typeof value == null) {
         return false
@@ -16,6 +17,7 @@ let checkValid = function (value) {
 
 
 //===============================Create Interns==============================================//
+
 let createIntern = async function (req, res) {
     try {
         let data = req.body
@@ -26,12 +28,7 @@ let createIntern = async function (req, res) {
 
         let { name, email, mobile, collegeName } = data
 
-        //=====================check Mandatory keys=====================//
-
-        // if (!(name && email && mobile && collegeName)) {
-        //    return  res.status(400).send({ status: false, msg: "Mandatory fields are required" })
-        // }
-
+        
         //=====================Validation of name=====================//
 
         if(!name){return res.status(400).send({status:false, msg:"name is mandatory"})}
@@ -48,7 +45,6 @@ let createIntern = async function (req, res) {
         if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/).test(email)) { return res.status(400).send({ status: false, msg: "Please provide correct characcters Email" }) }
         let duplicateEmail = await internModel.findOne({ email: email })
         if (duplicateEmail) { return res.status(409).send({ status: false, msg: "This EmailID already exists please provide another EmailID." }) }
-
 
         //=====================Validation of mobile=====================//
 
@@ -140,3 +136,4 @@ let collegeDetails = async function (req, res) {
 //=====================Exporting Funcitons=====================//
 
 module.exports = { createIntern, collegeDetails }
+

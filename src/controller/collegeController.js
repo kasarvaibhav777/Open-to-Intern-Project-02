@@ -26,13 +26,7 @@ const createColleges = async function (req, res) {
 
         let { name, fullName, logoLink } = data
 
-        //=====================check Mandatory keys=====================//
-       
-        // if (!(name && fullName && logoLink)) {
-        //    return res.status(400).send({ status: false, msg: "Mandatory fields are required" })
-        // }
-
- 
+    
          //=====================Validation of name=====================//
 
         if(!name){return res.status(400).send({status:false, msg:"name is mandatory"})}
@@ -59,6 +53,7 @@ const createColleges = async function (req, res) {
         if (!(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/).test(logoLink)) return res.status(400).send({ status: false, msg: "Please Use Correct Characters in logoLink" })
 
         //=====================creating College data in DB=====================//
+        
         let college = await collegeModel.create(data)
         let collegeResponse={name:college.name, fullName:college.fullName, logoLink:college.logoLink, isDeleted:college.isDeleted}
         return res.status(201).send({ status: true, msg: collegeResponse })
