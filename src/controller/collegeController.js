@@ -28,14 +28,15 @@ const createColleges = async function (req, res) {
 
         //=====================check Mandatory keys=====================//
        
-        if (!(name && fullName && logoLink)) {
-           return res.status(400).send({ status: false, msg: "Mandatory fields are required" })
-        }
+        // if (!(name && fullName && logoLink)) {
+        //    return res.status(400).send({ status: false, msg: "Mandatory fields are required" })
+        // }
 
-
+ 
          //=====================Validation of name=====================//
 
-        if (!checkValid(name)) return res.status(400).send({ status: false, message: "Please Provide valid Input" })
+        if(!name){return res.status(400).send({status:false, msg:"name is mandatory"})}
+        if (!checkValid(name)) return res.status(400).send({ status: false, message: "Please Provide valid type of Input in name" })
         if (!(/^[a-z]+$\b/).test(name)) return res.status(400).send({ status: false, msg: "Please Use Correct Characters in name" })
 
         let duplicateName = await collegeModel.findOne({ name: name })
@@ -44,7 +45,8 @@ const createColleges = async function (req, res) {
 
          //=====================Validation of fullName=====================//
 
-        if (!checkValid(fullName)) return res.status(400).send({ status: false, message: "Please Provide valid Input" })
+        if(!fullName){return res.status(400).send({status:false, msg:"fullName is mandatory"})}
+        if (!checkValid(fullName)) return res.status(400).send({ status: false, message: "Please Provide validtype of Input in fullName" })
         if (!(/^([A-Za-z]+[,]?[ ]?|[A-Za-z]+['-]?)+$/).test(fullName)) return res.status(400).send({ status: false, msg: "Please Use Correct Characters in fullname" })
         let checkDuplicate = await collegeModel.findOne({ fullName: fullName })
         if (checkDuplicate) { return res.status(409).send({ status: false, msg: "This fullName already exists please provide another fullName." }) }
@@ -52,13 +54,15 @@ const createColleges = async function (req, res) {
 
         //=====================Validation of logoLink=====================//
 
-        if (!checkValid(logoLink)) return res.status(400).send({ status: false, message: "Please Provide valid Input" })
+        if(!logoLink){return res.status(400).send({status:false, msg:"logoLink is mandatory"})}
+        if (!checkValid(logoLink)) return res.status(400).send({ status: false, message: "Please Provide valid type of Input in logoLInk" })
         if (!(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/).test(logoLink)) return res.status(400).send({ status: false, msg: "Please Use Correct Characters in logoLink" })
 
         //=====================creating College data in DB=====================//
         let college = await collegeModel.create(data)
         let collegeResponse={name:college.name, fullName:college.fullName, logoLink:college.logoLink, isDeleted:college.isDeleted}
         return res.status(201).send({ status: true, msg: collegeResponse })
+
     }
 
     catch (error) {

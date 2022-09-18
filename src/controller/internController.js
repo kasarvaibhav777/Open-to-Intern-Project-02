@@ -28,13 +28,14 @@ let createIntern = async function (req, res) {
 
         //=====================check Mandatory keys=====================//
 
-        if (!(name && email && mobile && collegeName)) {
-           return  res.status(400).send({ status: false, msg: "Mandatory fields are required" })
-        }
+        // if (!(name && email && mobile && collegeName)) {
+        //    return  res.status(400).send({ status: false, msg: "Mandatory fields are required" })
+        // }
 
         //=====================Validation of name=====================//
 
-        if (!checkValid(name)) return res.status(400).send({ status: false, message: "Please Provide valid Input" })
+        if(!name){return res.status(400).send({status:false, msg:"name is mandatory"})}
+        if (!checkValid(name)) return res.status(400).send({ status: false, message: "Please Provide valid type of Input in name" })
         if (!(/^[a-zA-z]+([\s][a-zA-Z]+)+$/).test(name)) return res.status(400).send({ status: false, msg: "Please Use Correct Characters in name" })
         let duplicateN = await internModel.findOne({ name: name })
         if (duplicateN) { return res.status(409).send({ status: false, msg: "This name already exists please provide another name." }) }
@@ -42,15 +43,17 @@ let createIntern = async function (req, res) {
 
         //=====================Validation of EmailID=====================//
 
-        if (!checkValid(email)) return res.status(400).send({ status: false, message: "please provide correct type of email." })
-        if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/).test(email)) { return res.status(400).send({ status: false, msg: "Please provide valid Email" }) }
+        if(!email){return res.status(400).send({status:false, msg:"email is mandatory"})}
+        if (!checkValid(email)) return res.status(400).send({ status: false, message: "please provide valid type of input in email." })
+        if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/).test(email)) { return res.status(400).send({ status: false, msg: "Please provide correct characcters Email" }) }
         let duplicateEmail = await internModel.findOne({ email: email })
         if (duplicateEmail) { return res.status(409).send({ status: false, msg: "This EmailID already exists please provide another EmailID." }) }
 
 
         //=====================Validation of mobile=====================//
 
-        if (!checkValid(mobile)) return res.status(400).send({ status: false, message: "Please Provide valid Input" })
+        if(!mobile){return res.status(400).send({status:false, msg:"mobile is mandatory"})}
+        if (!checkValid(mobile)) return res.status(400).send({ status: false, message: "Please Provide valid type of Input in mobile" })
         if (!  (/^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/).test(mobile)) return res.status(400).send({ status: false, msg: "Please Use Correct Digits in mobile" })
         let duplicateMobile = await internModel.findOne({ mobile: mobile })
         if (duplicateMobile) { return res.status(409).send({ status: false, msg: "This mobile already exists please provide another mobile." }) }
@@ -58,14 +61,15 @@ let createIntern = async function (req, res) {
 
         //=====================Validation of collegeName=====================//
 
-        if (!checkValid(collegeName)) return res.status(400).send({ status: false, message: "Please Provide valid Input" })
+        if(!collegeName){return res.status(400).send({status:false, msg:"collegeName is mandatory"})}
+        if (!checkValid(collegeName)) return res.status(400).send({ status: false, message: "Please Provide valid Input in collegeName" })
         if (!(/^[a-z]+$\b/).test(collegeName)) return res.status(400).send({ status: false, msg: "Please Use Correct Characters in collegeName" })
 
 
         //=====================check presence of collegeName in DB=====================//
 
         let clg = await collegeModel.findOne({ isDeleted: false, name: collegeName })
-        if (!clg) {return res.status(404).send({ status: false, msg: "this college is not found" }) }
+        if (!clg) {return res.status(404).send({ status: false, msg: " college not found" }) }
 
         
         let obj = { ...data, collegeId: clg._id }
